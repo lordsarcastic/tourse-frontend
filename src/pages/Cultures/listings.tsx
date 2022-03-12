@@ -1,0 +1,37 @@
+import { FunctionComponent } from "react";
+import { Link } from "react-router-dom";
+import { useAxios } from "use-axios-client";
+import { useErrorHook } from "../../hooks";
+import { CULTURES_LIST } from "../../routes";
+import { CultureType } from "../../types";
+
+export const Culture: FunctionComponent<CultureType> = ({
+    id,
+    name,
+    description,
+    slug,
+    zone,
+    gallery,
+}) => {
+    return (
+        <Link to={`/cultures/${slug}`} style={{backgroundImage: gallery.photos[0].image}} className="h-56">
+            <p className="text-2xl bg-black text-white">{name}</p>
+        </Link>
+    )
+}
+
+export const CultureListing = () => {
+    const { loading, data, error } = useAxios<any>(CULTURES_LIST);
+    const _ = useErrorHook(error);
+
+    return (
+        <>
+        {loading && <p className="text-7xl text-center text-green-500 font-bolder">Loading</p>}
+        {!loading && <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center gap-x-8 gap-y-16">
+            {data?.results.map((culture: CultureType) => (
+                <Culture {...culture} key={culture.id} />
+            ))}
+        </div>}
+        </>
+    )
+}

@@ -7,6 +7,7 @@ import CulturesPage from "./pages/Cultures";
 import CulturesDetail from "./pages/Cultures/Detail";
 import DestinationsPage from "./pages/Destinations";
 import DestinationDetail from "./pages/Destinations/Detail";
+import FavoriteListingPage from "./pages/Favourites";
 import HomePage from "./pages/Home";
 import LoginPage from "./pages/Login";
 
@@ -30,6 +31,7 @@ function App() {
           <Route path={DestinationsPage.route} element={<DestinationsPage.Component />} />
           <Route path={DestinationDetail.route} element={<DestinationDetail.Component />} />
           <Route path={LoginPage.route} element={<LoginPage.Component />} />
+          <Route path={FavoriteListingPage.route} element={<FavoriteListingPage.Component />} />
           <Route path="*" element={<ErrorPage status={404} message="Not found" />} />
         </Routes>
       </main>

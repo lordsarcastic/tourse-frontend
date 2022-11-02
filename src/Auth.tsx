@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
     createContext,
     ReactNode,
@@ -12,7 +13,7 @@ import { AUTH_TOKEN_LOCAL_STORAGE_KEY } from "./constants";
 import { useError } from "./Error";
 import LoginPage from "./pages/Login";
 import { client } from "./requests";
-import { REFRESH_TOKEN, VERIFY_TOKEN } from "./routes";
+import { BASE_URL, REFRESH_TOKEN, VERIFY_TOKEN } from "./routes";
 import { LocalStorageUserType } from "./types";
 
 export type AuthContextType = {
@@ -58,6 +59,13 @@ export const AuthWrapper = ({ children }: { children: ReactNode }) => {
         return Boolean(authToken);
     };
 
+    const authClient = axios.create({
+        baseURL: BASE_URL,
+        headers: {
+            Authorization: `Bearer ${getAuthTokenFunction()?.access}`,
+        },
+    });
+
     const isLoggedIn = useCallback(loggedIn, [loggedIn]);
     const login = useCallback(loginFunction, [loginFunction]);
     const logout = useCallback(logoutFunction, [logoutFunction]);
@@ -72,11 +80,12 @@ export const AuthWrapper = ({ children }: { children: ReactNode }) => {
         () => ({
             login,
             logout,
+            authClient,
             getAuthToken,
             isLoggedIn,
             updateAccessToken,
         }),
-        [login, logout, isLoggedIn, getAuthToken, updateAccessToken]
+        [login, logout, isLoggedIn, getAuthToken, updateAccessToken, authClient]
     );
 
     return (
@@ -140,6 +149,7 @@ export const useLoggedIn = () => {
         }
     }, [
         isLoggedIn,
+        logout,
         getAuthToken,
         navigate,
         setError,
